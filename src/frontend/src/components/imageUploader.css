@@ -1,38 +1,43 @@
 .image-uploader {
+    height: 50vh;
+    width: 80vw;
+    margin: 0 auto;
     display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
   }
   
-  .left-window {
-    width: 75%;
-    height: 100%;
+  .selected-image {
+    flex-basis: 75%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  .selected-image {
+  .selected-image img {
     max-height: 100%;
     max-width: 100%;
   }
   
-  .right-window {
-    width: 20%;
-    height: 100%;
-    overflow-y: auto;
-    padding-left: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+  .image-list {
+    flex-basis: 20%;
+    overflow-y: scroll;
   }
   
-  .uploaded-image {
-    width: 100%;
-    margin-bottom: 10px;
+  .image-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .image-list li {
+    margin: 5px;
+  }
+  
+  .image-list img {
+    height: 50px;
+  }
+  
+  .upload-btn {
+    display: block;
+    margin: 5px auto;
   }
   

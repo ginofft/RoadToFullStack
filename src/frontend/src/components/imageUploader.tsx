@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import './imageUploader.css'
 
-function ImageUploader(){
+function imageUploader(){
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [uploadedImages, setUploadedImages] = useState([])
 
@@ -29,11 +29,6 @@ function ImageUploader(){
             }
             </div>
             <div className="image-list">
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={hanldeImageUpload}
-                />
                 <ul>
                     {uploadedImages.map((image) => (    
                         <li key={image} onClick={() => handleImageClick(image)}>
@@ -41,9 +36,15 @@ function ImageUploader(){
                         </li>
                     ))}
                 </ul>
+                <input
+                type="file"
+                accept="image/*"
+                onChange={hanldeImageUpload}
+                className="upload-btn"
+                />
             </div>
         </div>
     )
 }
 
-export default ImageUploader;
+export default imageUploader;
