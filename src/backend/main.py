@@ -3,7 +3,6 @@ from typing_extensions import Annotated
 
 app = FastAPI()
 
-
 @app.get("/items/{item_id}")
 async def read_items(
     *,
