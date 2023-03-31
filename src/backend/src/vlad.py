@@ -7,7 +7,6 @@ import numpy as np
 import cv2
 
 from .dataset import ImageDataset
-from .utils import *
 class vlad:
   '''This class is used to find visual vocabularies of a dataset; From which, calculation of VLAD of a dataset (or image) can be done
 
@@ -26,8 +25,8 @@ class vlad:
     save `self.kmeans` into `path`
   `load_cluster(path)` -> None
     load `self.kmeans` from `path`
-  `save_dataset_vlad(dataset, out_path)` -> None
-    calculate VLAD of a dataset and save it into `out_path`
+  `save_dataset_vlad(dataset, out_path)` -> npdarray
+    calculate VLAD of a dataset and save it into `out_path` and return it
   '''
   _sift = cv2.SIFT_create()
   def __init__(self, path: Optional[Path] = None):
@@ -56,11 +55,12 @@ class vlad:
 
   def save_dataset_vlad(self,
                         dataset: ImageDataset,
-                        out_path = './output/vlads.npy') -> None:
+                        out_path = './output/vlads.npy') -> np.ndarray:
     vlads = np.zeros([len(dataset), self.vocabs.shape[0]*self.vocabs.shape[1]])
     for i, image in enumerate(dataset):
       vlads[i] = self.calculate_VLAD(image)
     np.save(out_path, vlads)
+    return vlads 
     
   def _calculate_SIFT(self, image):
     _, des = self._sift.detectAndCompute(image, None)
