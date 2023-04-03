@@ -24,9 +24,13 @@ class ImageDataset(torch.utils.data.Dataset):
 
   def __len__(self):
     return len(self.names)
-
+  
+  def get_path(self, idx):
+    return self.root/self.names[idx]
+  
   def _read_image(self, path, grayscale=False):
     """This function read an image from a path.
+   
     The read is perform using opencv.
     """
     if grayscale:
