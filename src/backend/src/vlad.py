@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Optional
+import h5py
 
 from sklearn.cluster import KMeans
 from joblib import dump, load
@@ -55,11 +56,23 @@ class vlad:
 
   def save_dataset_vlad(self,
                         dataset: ImageDataset,
-                        out_path = './output/vlads.npy') -> np.ndarray:
+                        out_path = './output/vlads.h5') -> np.ndarray:
+    
     vlads = np.zeros([len(dataset), self.vocabs.shape[0]*self.vocabs.shape[1]])
     for i, image in enumerate(dataset):
       vlads[i] = self.calculate_VLAD(image)
-    np.save(out_path, vlads)
+      name = dataset.root/dataset.names[i]
+      with h5py.File(out_path, 'a', libver = 'latest') as f:
+        try:
+          if name in f:
+            del f[name]
+          grp = f.create_group(name)
+          grp.create_dataset('vlad', data=vlads[i])
+        except OSError as error:
+          if 'No space left on device' in error.args[0]:
+            del grp, f[name]
+          raise error
+    
     return vlads 
     
   def _calculate_SIFT(self, image):
@@ -82,3 +95,4 @@ class vlad:
     vlad = vlad/np.sqrt(np.dot(vlad,vlad))        #L2 norm
     
     return vlad
+  

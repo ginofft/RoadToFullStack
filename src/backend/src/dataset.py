@@ -43,3 +43,4 @@ class ImageDataset(torch.utils.data.Dataset):
     if not grayscale and len(image.shape) == 3:
         image = image[:, :, ::-1]  # BGR to RGB
     return image
+  

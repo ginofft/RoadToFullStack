@@ -47,4 +47,3 @@ def get_topk_indices(db_vlad, q_vlad,k) -> np.ndarray:
         retrieved_indices[i, :] = topk_indices
     
     return retrieved_indices
-
