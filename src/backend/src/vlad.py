@@ -61,7 +61,7 @@ class vlad:
     vlads = np.zeros([len(dataset), self.vocabs.shape[0]*self.vocabs.shape[1]])
     for i, image in enumerate(dataset):
       vlads[i] = self.calculate_VLAD(image)
-      name = dataset.root/dataset.names[i]
+      name = str(dataset.root/dataset.names[i])
       with h5py.File(out_path, 'a', libver = 'latest') as f:
         try:
           if name in f:
