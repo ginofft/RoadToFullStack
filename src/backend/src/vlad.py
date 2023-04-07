@@ -59,19 +59,16 @@ class vlad:
                         out_path = './output/vlads.h5') -> np.ndarray:
     
     vlads = np.zeros([len(dataset), self.vocabs.shape[0]*self.vocabs.shape[1]])
+    names = []
+
     for i, image in enumerate(dataset):
       vlads[i] = self.calculate_VLAD(image)
       name = str(dataset.root/dataset.names[i])
-      with h5py.File(out_path, 'a', libver = 'latest') as f:
-        try:
-          if name in f:
-            del f[name]
-          grp = f.create_group(name)
-          grp.create_dataset('vlad', data=vlads[i])
-        except OSError as error:
-          if 'No space left on device' in error.args[0]:
-            del grp, f[name]
-          raise error
+      names.append(name)
+    
+    with h5py.File(out_path, 'w') as f:
+      f.create_dataset('vlads', data=vlads)
+      f.create_dataset('names', data=names, dtype=h5py.special_dtype(vlen=str))
     
     return vlads 
     
