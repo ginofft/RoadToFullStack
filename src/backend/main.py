@@ -1,16 +1,17 @@
-from fastapi import FastAPI, Path, Query
-from typing_extensions import Annotated
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
-@app.get("/items/{item_id}")
-async def read_items(
-    *,
-    item_id: Annotated[int, Path(title="The ID of the item to get", ge=0, le=1000)],
-    q: str,
-    size: Annotated[float, Query(gt=0, lt=10.5)],
-):
-    results = {"item_id": item_id}
-    if q:
-        results.update({"q": q})
-    return results
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+@app.get("/database/{filename}")
+async def get_image(filename: str):
+    return FileResponse(f"database/{filename}")
+
+@app.post("/api/upload")
+async def upload_file(image: UploadFile = File(...)):
+    contents = await image.read()
+    return {'status' : 'ok'}
