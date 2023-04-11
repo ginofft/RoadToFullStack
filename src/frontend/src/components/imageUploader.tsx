@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./imageUploader.css";
+import axios from 'axios';
+
+const url = 'http://localhost:8000/api/upload'
 
 function imageUploader() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -16,8 +19,15 @@ function imageUploader() {
     }
   }
 
-  function handleImageClick(image: string) {
-    setSelectedImage(image);
+  const handleImageClick = async (imageId: string) => {
+    setSelectedImage(imageId)
+    console.log(imageId)
+    try{
+      const response = await axios.post(url, {imageId});
+      console.log(response.data)
+    } catch (error){
+      console.error(error)
+    }
   }
 
   return (
