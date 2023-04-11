@@ -50,31 +50,33 @@ function imageUploader() {
 
   return (
     <div className="image-uploader">
-      <div className="selected-image">
-        {selectedImage ? (
-          <img src={selectedImage} alt="selected" />
-        ) : (
-          <p>No Image Selected</p>
-        )}
-      </div>
-      <div className="image-list-wrapper">
-        <div className="image-list">
-          <ul>
-            {uploadedImages.map((image) => (
-              <li key={image} onClick={() => handleImageClick(image)}>
-                <img src={image} alt="uploaded" />
-              </li>
-            ))}
-          </ul>
+      <div className="selected-image-and-list-wrapper">
+        <div className="selected-image">
+          {selectedImage ? (
+            <img src={selectedImage} alt="selected" />
+          ) : (
+            <p>No Image Selected</p>
+          )}
         </div>
-        <div className="upload-btn">
-          <label htmlFor="file-input">Choose File</label>
-          <input
-            id="file-input"
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
+        <div className="image-list-wrapper">
+          <div className="image-list">
+            <ul>
+              {uploadedImages.map((image) => (
+                <li key={image} onClick={() => handleImageClick(image)}>
+                  <img src={image} alt="uploaded" />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="upload-btn">
+            <label htmlFor="file-input">Choose File</label>
+            <input
+              id="file-input"
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+          </div>
         </div>
       </div>
       <div className="retrieved-image-container">
