@@ -25,6 +25,7 @@ function imageUploader() {
     const blob = await (await fetch(imageId)).blob()
     const formData = new FormData()
     formData.append('imageFile', blob)
+    //console.log(blob)
     const response = await axios.post(url, formData,
       {
         headers: {
