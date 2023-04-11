@@ -39,7 +39,7 @@ async def upload_file(imageFile: UploadFile):
     image = cv2.imdecode(np.frombuffer(imageFile.file.read(),dtype = np.uint8), cv2.IMREAD_COLOR)
     
     results = []
-    indices = get_topk_indices(db_vlad, model.calculate_VLAD(image), 7)
+    indices = get_topk_indices(db_vlad, model.calculate_VLAD(image), 10)
     indices = indices[0]
     for i in indices:
         filename = db_names[i]
