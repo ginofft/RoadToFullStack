@@ -1,13 +1,21 @@
-from fastapi import FastAPI, File, UploadFile
-from PIL import Image
-import aiofiles
-import base64
-import cv2
-import numpy as np
+from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+import base64
+import h5py
+import cv2
+import numpy as np
+from src.vlad import vlad
+from src.utils import get_topk_indices
+
 app = FastAPI()
+
+model = vlad('output/cluster.joblib')
+with h5py.File('output/vlads.h5', 'r') as f:
+    db_vlad = f['vlads'][:]
+    db_names = f['names'][:]
+    db_names = [name.decode('utf-8') for name in db_names]
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,5 +37,20 @@ async def get_image(filename: str):
 @app.post("/queryImage")
 async def upload_file(imageFile: UploadFile):   
     image = cv2.imdecode(np.frombuffer(imageFile.file.read(),dtype = np.uint8), cv2.IMREAD_COLOR)
-    cv2.imwrite("database/1.jpg", image) 
-    return {"status": "ok"}
+    
+    results = []
+    indices = get_topk_indices(db_vlad, model.calculate_VLAD(image), 5)
+    indices = indices[0]
+    for i in indices:
+        filename = db_names[i]
+        with open(f"{filename}", "rb") as f:
+            image_data = f.read()
+            base64_encoded_data = base64.b64encode(image_data).decode('utf-8')
+            results.append(
+                {
+                    "name": filename,
+                    "image": base64_encoded_data
+                }
+            )
+
+    return {"status": "ok", "results" : results}

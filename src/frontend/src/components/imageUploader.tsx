@@ -25,15 +25,19 @@ function imageUploader() {
     const blob = await (await fetch(imageId)).blob()
     const formData = new FormData()
     formData.append('imageFile', blob)
-    //console.log(blob)
-    const response = await axios.post(url, formData,
-      {
-        headers: {
-          "Content-type": "multipart/form-data",
+    try{
+      const response = await axios.post(url, formData,
+        {
+          headers: {
+            "Content-type": "multipart/form-data",
+          }
         }
-      }
-    )
-    console.log(response.data)
+      )
+      console.log(response.data)
+    }
+    catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -68,17 +72,3 @@ function imageUploader() {
     </div>
   );
 }
-
-function DataURIToBlob(dataURI: string)
-{
-  const splitDataURI = dataURI.split(',')
-  const byteString = splitDataURI[0].indexOf('base64') > 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
-  const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
-
-  const ia  = new Uint8Array(byteString.length)
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i)
-  }
-  return new Blob([ia], {type: mimeString})
-}
-export default imageUploader;
