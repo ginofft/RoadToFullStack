@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./imageUploader.css";
 import axios from 'axios';
+import header from "./header";
 
-const url = 'http://localhost:8000/api/upload'
+const url = 'http://localhost:8000/queryImage'
 
 function imageUploader() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -21,13 +22,17 @@ function imageUploader() {
 
   const handleImageClick = async (imageId: string) => {
     setSelectedImage(imageId)
-    console.log(imageId)
-    try{
-      const response = await axios.post(url, {imageId});
-      console.log(response.data)
-    } catch (error){
-      console.error(error)
-    }
+    const blob = await (await fetch(imageId)).blob()
+    const formData = new FormData()
+    formData.append('imageFile', blob)
+    const response = await axios.post(url, formData,
+      {
+        headers: {
+          "Content-type": "multipart/form-data",
+        }
+      }
+    )
+    console.log(response.data)
   }
 
   return (
@@ -63,4 +68,16 @@ function imageUploader() {
   );
 }
 
+function DataURIToBlob(dataURI: string)
+{
+  const splitDataURI = dataURI.split(',')
+  const byteString = splitDataURI[0].indexOf('base64') > 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
+  const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
+
+  const ia  = new Uint8Array(byteString.length)
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i)
+  }
+  return new Blob([ia], {type: mimeString})
+}
 export default imageUploader;
