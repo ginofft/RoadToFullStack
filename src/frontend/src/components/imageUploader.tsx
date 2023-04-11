@@ -8,6 +8,9 @@ const url = 'http://localhost:8000/queryImage'
 function imageUploader() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [retrievedImages, setRetrievedImages] = useState<{ name: string, image: string }[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files ? event.target.files[0] : null;
@@ -25,19 +28,24 @@ function imageUploader() {
     const blob = await (await fetch(imageId)).blob()
     const formData = new FormData()
     formData.append('imageFile', blob)
-    try{
-      const response = await axios.post(url, formData,
-        {
-          headers: {
-            "Content-type": "multipart/form-data",
-          }
+    setIsLoading(true);
+    setErrorMessage('');
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          "Content-type": "multipart/form-data",
         }
-      )
-      console.log(response.data)
+      })
+      if (response.data.status === "ok") {
+        setRetrievedImages(response.data.results);
+      } else {
+        setErrorMessage("Failed to retrieve images.");
+      }
     }
     catch (error) {
-      console.log(error)
+      setErrorMessage("Failed to retrieve images.");
     }
+    setIsLoading(false);
   }
 
   return (
@@ -51,24 +59,33 @@ function imageUploader() {
       </div>
       <div className="image-list-wrapper">
         <div className="image-list">
-            <ul>
+          <ul>
             {uploadedImages.map((image) => (
-                <li key={image} onClick={() => handleImageClick(image)}>
+              <li key={image} onClick={() => handleImageClick(image)}>
                 <img src={image} alt="uploaded" />
-                </li>
+              </li>
             ))}
-            </ul>
+          </ul>
         </div>
         <div className="upload-btn">
-            <label htmlFor="file-input">Choose File</label>
-            <input
-                id="file-input"
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-            />
+          <label htmlFor="file-input">Choose File</label>
+          <input
+            id="file-input"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
         </div>
       </div>
+      <div className="retrieved-image-container">
+        {retrievedImages.map((image) => (
+          <div key={image.name} className="retrieved-image">
+            <img src={`data:image/png;base64,${image.image}`} alt={image.name} />
+          </div>
+        ))}
+      </div>
     </div>
-  );
+  );  
 }
+
+export default imageUploader;
