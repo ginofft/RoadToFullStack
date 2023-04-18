@@ -5,5 +5,5 @@ numpy==1.24.2
 scikit-learn==1.2.2
 uvicorn
 pydantic
-opencv-python
-#torch it is only used in training, i comment it out to get a smaller docker image
+opencv-python-headless
+python-multipart

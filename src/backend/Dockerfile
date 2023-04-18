@@ -1,12 +1,10 @@
-FROM python:3.9
+FROM python:3.9-slim
 
 WORKDIR /dist
 
 COPY ./requirements.txt /dist/requirements.txt
 
-RUN pip install --no-cache-dir -r /dist/requirements.txt
-RUN apt-get update && apt-get install -y python3-opencv
-
+RUN pip install --no-cache-dir -r /dist/requirements.txt && pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 COPY . /dist
 
-#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
