@@ -1,9 +1,7 @@
-import torch
-from types import SimpleNamespace
 from pathlib import Path
 import cv2
 
-class ImageDataset(torch.utils.data.Dataset):
+class ImageDataset:
   default_conf = {
     'globs': ['*.jpg', '*.png', '*.jpeg'],
     'grayscale': False,

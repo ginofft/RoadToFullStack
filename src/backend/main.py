@@ -28,7 +28,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "VLAD-based Image Retrieval"}
 
 @app.get("/database/{filename}")
 async def get_image(filename: str):
